@@ -1,12 +1,22 @@
 cmake_minimum_required(VERSION 3.5)
+
+set(CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD 20)
+
 project(HelloApp 
         VERSION 0.0.1
         DESCRIPTION "The leading Hello World App"
         LANGUAGES CXX)
-#GLOBING
-file(GLOB_RECURSE SOURCE_FILES src/*.cpp)
-add_executable(HelloAppBinary main.cpp ${SOURCE_FILES})
+
 #Target
-#add_executable(HelloAppBinary main.cpp src/dog.cpp src/operations.cpp)
-target_compile_features(HelloAppBinary PRIVATE cxx_std_20)
-target_include_directories(HelloAppBinary PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+add_library(operations STATIC src/operations.cpp)
+target_include_directories(operations PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+
+add_library(dogger STATIC ${CMAKE_CURRENT_SOURCE_DIR}/Dogger/src/dog.cpp)
+target_include_directories(dogger PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Dogger/include)
+
+
+add_executable(HelloAppBinary main.cpp)
+target_include_directories(HelloAppBinary PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(HelloAppBinary PUBLIC operations dogger)
